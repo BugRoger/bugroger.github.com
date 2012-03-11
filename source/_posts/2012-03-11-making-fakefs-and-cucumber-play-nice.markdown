@@ -13,11 +13,11 @@ There's a simple solution using cucumber hooks. In `features/support/env.rb` add
 ``` 
 require 'fakefs/safe'
 
-Before('fakefs') do
+Before('@fakefs') do
   FakeFS.activate!
 end
 
-After('fakefs') do
+After('@fakefs') do
   FakeFS::FileSystem.clear
   FakeFS.deactivate!
 end
