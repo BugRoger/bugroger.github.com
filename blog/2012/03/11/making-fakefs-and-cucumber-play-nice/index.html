@@ -5,17 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>World Domination - Brainwidth Exceeded</title>
+  <title>Making FakeFS and Cucumber Play Nice - Brainwidth Exceeded</title>
   <meta name="author" content="Michael Schmidt">
 
   
-  <meta name="description" content="1
-$ sudo make me a sandwich Discover if a number is prime Source Article1
-2
-3
-4
-5
-class Fixnum def prime? (&#39;1&#39; * self) !~ /^1?$|^(11+?)\1+$/ &hellip;">
+  <meta name="description" content="As it turns out just requiring the fakefs gem doesn&#8217;t play nice with Cucumber. The fakefs confuses Cucumber pretty well and it can&#8217;t find &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,7 +18,7 @@ class Fixnum def prime? (&#39;1&#39; * self) !~ /^1?$|^(11+?)\1+$/ &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://bugroger.github.com/blog/2012/03/08/world-domination">
+  <link rel="canonical" href="http://bugroger.github.com/blog/2012/03/11/making-fakefs-and-cucumber-play-nice">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -76,7 +70,7 @@ class Fixnum def prime? (&#39;1&#39; * self) !~ /^1?$|^(11+?)\1+$/ &hellip;">
   
   <header>
     
-      <h1 class="entry-title">World Domination</h1>
+      <h1 class="entry-title">Making FakeFS and Cucumber Play Nice</h1>
     
     
       <p class="meta">
@@ -92,61 +86,46 @@ class Fixnum def prime? (&#39;1&#39; * self) !~ /^1?$|^(11+?)\1+$/ &hellip;">
   
 
 
-<time datetime="2012-03-08T22:15:00+01:00" pubdate data-updated="true">Mar 8<span>th</span>, 2012</time>
+<time datetime="2012-03-11T11:52:00+01:00" pubdate data-updated="true">Mar 11<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo make me a sandwich</span></code></pre></td></tr></table></div></figure>
+<div class="entry-content"><p>As it turns out just requiring the fakefs gem doesn&#8217;t play nice with Cucumber. The fakefs confuses Cucumber pretty well and it can&#8217;t find its own steps anymore.</p>
 
+<p>There&#8217;s a simple solution using cucumber hooks. In <code>features/support/env.rb</code> add the following tag specific hooks:</p>
 
-
-
-<figure class='code'><figcaption><span>Discover if a number is prime </span><a href='http://www.noulakaz.net/weblog/2007/03/18/a-regular-expression-to-check-for-prime-numbers/'>Source Article</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Fixnum</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">prime?</span>
-</span><span class='line'>    <span class="p">(</span><span class="s1">&#39;1&#39;</span> <span class="o">*</span> <span class="nb">self</span><span class="p">)</span> <span class="o">!~</span> <span class="sr">/^1?$|^(11+?)\1+$/</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>require 'fakefs/safe'
+</span><span class='line'>
+</span><span class='line'>Before('fakefs') do
+</span><span class='line'>  FakeFS.activate!
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>After('fakefs') do
+</span><span class='line'>  FakeFS::FileSystem.clear
+</span><span class='line'>  FakeFS.deactivate!
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
+<p>Afterwards it&#8217;s possible to activate FakeFS selectively on a feature or scenario basis:</p>
 
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  @fakefs
+</span><span class='line'>  Scenario: Create Symlinks</span></code></pre></td></tr></table></div></figure>
 
-<div><script src='https://gist.github.com/996818.js?file='></script>
-<noscript><pre><code>@@ -590,7 +590,7 @@ class SpritesTest &lt; Test::Unit::TestCase
-  it &quot;should generate a sprite from nested folders&quot; do
-    css = render &lt;&lt;-SCSS
--     @import &quot;nested/*.png&quot;;
-+     @import &quot;nested/**/*.png&quot;;
-      @include all-nested-sprites;
-    SCSS
-    assert_correct css, &lt;&lt;-CSS</code></pre></noscript></div>
-
-
-<p><em>wat?</em></p>
-
-<p>Some of these words <em>are emphasized</em>.
-Some of these words <em>are emphasized also</em>.</p>
-
-<p>Use two asterisks for <strong>strong emphasis</strong>.
-Or, if you prefer, <strong>use two underscores instead</strong>.</p>
-
-<ul>
-<li>  Candy.</li>
-<li>  Gum.</li>
-<li>  Booze.</li>
-</ul>
-
-
-<p>I strongly recommend against using any <code>&lt;blink&gt;</code> tags.</p>
 </div>
 
 
@@ -169,12 +148,12 @@ Or, if you prefer, <strong>use two underscores instead</strong>.</p>
   
 
 
-<time datetime="2012-03-08T22:15:00+01:00" pubdate data-updated="true">Mar 8<span>th</span>, 2012</time>
+<time datetime="2012-03-11T11:52:00+01:00" pubdate data-updated="true">Mar 11<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/geek/'>geek</a>
+    <a class='category' href='/blog/categories/bdd/'>bdd</a>, <a class='category' href='/blog/categories/cucumber/'>cucumber</a>, <a class='category' href='/blog/categories/ruby/'>ruby</a>
   
 </span>
 
@@ -183,7 +162,7 @@ Or, if you prefer, <strong>use two underscores instead</strong>.</p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bugroger.github.com/blog/2012/03/08/world-domination/" data-via="" data-counturl="http://bugroger.github.com/blog/2012/03/08/world-domination/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://bugroger.github.com/blog/2012/03/11/making-fakefs-and-cucumber-play-nice/" data-via="" data-counturl="http://bugroger.github.com/blog/2012/03/11/making-fakefs-and-cucumber-play-nice/" >Tweet</a>
   
   
   
@@ -212,7 +191,7 @@ Or, if you prefer, <strong>use two underscores instead</strong>.</p>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/03/08/world-domination/">World Domination</a>
+        <a href="/blog/2012/03/11/making-fakefs-and-cucumber-play-nice/">Making FakeFS and Cucumber Play Nice</a>
       </li>
     
   </ul>
@@ -242,8 +221,8 @@ Or, if you prefer, <strong>use two underscores instead</strong>.</p>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://bugroger.github.com/blog/2012/03/08/world-domination/';
-        var disqus_url = 'http://bugroger.github.com/blog/2012/03/08/world-domination/';
+        var disqus_identifier = 'http://bugroger.github.com/blog/2012/03/11/making-fakefs-and-cucumber-play-nice/';
+        var disqus_url = 'http://bugroger.github.com/blog/2012/03/11/making-fakefs-and-cucumber-play-nice/';
         var disqus_script = 'embed.js';
       
     (function () {

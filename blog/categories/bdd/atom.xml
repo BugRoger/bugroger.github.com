@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: bdd | Brainwidth Exceeded]]></title>
+  <link href="http://bugroger.github.com/blog/categories/bdd/atom.xml" rel="self"/>
+  <link href="http://bugroger.github.com/"/>
+  <updated>2012-03-11T12:08:15+01:00</updated>
+  <id>http://bugroger.github.com/</id>
+  <author>
+    <name><![CDATA[Michael Schmidt]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Making FakeFS and Cucumber Play Nice]]></title>
+    <link href="http://bugroger.github.com/blog/2012/03/11/making-fakefs-and-cucumber-play-nice/"/>
+    <updated>2012-03-11T11:52:00+01:00</updated>
+    <id>http://bugroger.github.com/blog/2012/03/11/making-fakefs-and-cucumber-play-nice</id>
+    <content type="html"><![CDATA[<p>As it turns out just requiring the fakefs gem doesn't play nice with Cucumber. The fakefs confuses Cucumber pretty well and it can't find its own steps anymore.</p>
+
+<p>There's a simple solution using cucumber hooks. In <code>features/support/env.rb</code> add the following tag specific hooks:</p>
+
+<p>```
+require 'fakefs/safe'</p>
+
+<p>Before('fakefs') do
+  FakeFS.activate!
+end</p>
+
+<p>After('fakefs') do
+  FakeFS::FileSystem.clear
+  FakeFS.deactivate!
+end
+```</p>
+
+<p>Afterwards it's possible to activate FakeFS selectively on a feature or scenario basis:</p>
+
+<p><code>
+  @fakefs
+  Scenario: Create Symlinks
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

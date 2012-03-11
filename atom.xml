@@ -4,7 +4,7 @@
   <title><![CDATA[Brainwidth Exceeded]]></title>
   <link href="http://bugroger.github.com/atom.xml" rel="self"/>
   <link href="http://bugroger.github.com/"/>
-  <updated>2012-03-09T01:00:31+01:00</updated>
+  <updated>2012-03-11T12:08:15+01:00</updated>
   <id>http://bugroger.github.com/</id>
   <author>
     <name><![CDATA[Michael Schmidt]]></name>
@@ -14,58 +14,43 @@
 
   
   <entry>
-    <title type="html"><![CDATA[World Domination]]></title>
-    <link href="http://bugroger.github.com/blog/2012/03/08/world-domination/"/>
-    <updated>2012-03-08T22:15:00+01:00</updated>
-    <id>http://bugroger.github.com/blog/2012/03/08/world-domination</id>
-    <content type="html"><![CDATA[<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo make me a sandwich</span></code></pre></td></tr></table></div></figure>
+    <title type="html"><![CDATA[Making FakeFS and Cucumber Play Nice]]></title>
+    <link href="http://bugroger.github.com/blog/2012/03/11/making-fakefs-and-cucumber-play-nice/"/>
+    <updated>2012-03-11T11:52:00+01:00</updated>
+    <id>http://bugroger.github.com/blog/2012/03/11/making-fakefs-and-cucumber-play-nice</id>
+    <content type="html"><![CDATA[<p>As it turns out just requiring the fakefs gem doesn&#8217;t play nice with Cucumber. The fakefs confuses Cucumber pretty well and it can&#8217;t find its own steps anymore.</p>
 
+<p>There&#8217;s a simple solution using cucumber hooks. In <code>features/support/env.rb</code> add the following tag specific hooks:</p>
 
-
-
-<figure class='code'><figcaption><span>Discover if a number is prime </span><a href='http://www.noulakaz.net/weblog/2007/03/18/a-regular-expression-to-check-for-prime-numbers/'>Source Article</a></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Fixnum</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">prime?</span>
-</span><span class='line'>    <span class="p">(</span><span class="s1">&#39;1&#39;</span> <span class="o">*</span> <span class="nb">self</span><span class="p">)</span> <span class="o">!~</span> <span class="sr">/^1?$|^(11+?)\1+$/</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>require 'fakefs/safe'
+</span><span class='line'>
+</span><span class='line'>Before('fakefs') do
+</span><span class='line'>  FakeFS.activate!
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>After('fakefs') do
+</span><span class='line'>  FakeFS::FileSystem.clear
+</span><span class='line'>  FakeFS.deactivate!
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
 
 
+<p>Afterwards it&#8217;s possible to activate FakeFS selectively on a feature or scenario basis:</p>
 
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  @fakefs
+</span><span class='line'>  Scenario: Create Symlinks</span></code></pre></td></tr></table></div></figure>
 
-<div><script src='https://gist.github.com/996818.js?file='></script>
-<noscript><pre><code>@@ -590,7 +590,7 @@ class SpritesTest &lt; Test::Unit::TestCase
-  it &quot;should generate a sprite from nested folders&quot; do
-    css = render &lt;&lt;-SCSS
--     @import &quot;nested/*.png&quot;;
-+     @import &quot;nested/**/*.png&quot;;
-      @include all-nested-sprites;
-    SCSS
-    assert_correct css, &lt;&lt;-CSS</code></pre></noscript></div>
-
-
-<p><em>wat?</em></p>
-
-<p>Some of these words <em>are emphasized</em>.
-Some of these words <em>are emphasized also</em>.</p>
-
-<p>Use two asterisks for <strong>strong emphasis</strong>.
-Or, if you prefer, <strong>use two underscores instead</strong>.</p>
-
-<ul>
-<li>  Candy.</li>
-<li>  Gum.</li>
-<li>  Booze.</li>
-</ul>
-
-
-<p>I strongly recommend against using any <code>&lt;blink&gt;</code> tags.</p>
 ]]></content>
   </entry>
   
