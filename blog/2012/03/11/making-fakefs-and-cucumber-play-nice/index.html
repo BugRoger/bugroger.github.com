@@ -109,11 +109,11 @@
 <span class='line-number'>10</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>require 'fakefs/safe'
 </span><span class='line'>
-</span><span class='line'>Before('fakefs') do
+</span><span class='line'>Before('@fakefs') do
 </span><span class='line'>  FakeFS.activate!
 </span><span class='line'>end
 </span><span class='line'>
-</span><span class='line'>After('fakefs') do
+</span><span class='line'>After('@fakefs') do
 </span><span class='line'>  FakeFS::FileSystem.clear
 </span><span class='line'>  FakeFS.deactivate!
 </span><span class='line'>end</span></code></pre></td></tr></table></div></figure>

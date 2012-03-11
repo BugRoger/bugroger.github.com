@@ -4,7 +4,7 @@
   <title><![CDATA[Category: cucumber | Brainwidth Exceeded]]></title>
   <link href="http://bugroger.github.com/blog/categories/cucumber/atom.xml" rel="self"/>
   <link href="http://bugroger.github.com/"/>
-  <updated>2012-03-11T12:08:15+01:00</updated>
+  <updated>2012-03-11T12:18:30+01:00</updated>
   <id>http://bugroger.github.com/</id>
   <author>
     <name><![CDATA[Michael Schmidt]]></name>
@@ -25,11 +25,11 @@
 <p>```
 require 'fakefs/safe'</p>
 
-<p>Before('fakefs') do
+<p>Before('@fakefs') do
   FakeFS.activate!
 end</p>
 
-<p>After('fakefs') do
+<p>After('@fakefs') do
   FakeFS::FileSystem.clear
   FakeFS.deactivate!
 end

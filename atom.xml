@@ -4,7 +4,7 @@
   <title><![CDATA[Brainwidth Exceeded]]></title>
   <link href="http://bugroger.github.com/atom.xml" rel="self"/>
   <link href="http://bugroger.github.com/"/>
-  <updated>2012-03-11T12:08:15+01:00</updated>
+  <updated>2012-03-11T12:18:30+01:00</updated>
   <id>http://bugroger.github.com/</id>
   <author>
     <name><![CDATA[Michael Schmidt]]></name>
@@ -34,11 +34,11 @@
 <span class='line-number'>10</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>require 'fakefs/safe'
 </span><span class='line'>
-</span><span class='line'>Before('fakefs') do
+</span><span class='line'>Before('@fakefs') do
 </span><span class='line'>  FakeFS.activate!
 </span><span class='line'>end
 </span><span class='line'>
-</span><span class='line'>After('fakefs') do
+</span><span class='line'>After('@fakefs') do
 </span><span class='line'>  FakeFS::FileSystem.clear
 </span><span class='line'>  FakeFS.deactivate!
 </span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
