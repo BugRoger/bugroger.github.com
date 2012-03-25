@@ -17,15 +17,27 @@ $header-subtitle-font-family: $heading-font-family !default;
 .mono { font-family: $mono; }
 
 body > header h1 {
-  font-size: 2.2em;
-  @extend .heading;
+  @include text-shadow(black -2px 2px 6px);
+  
+  position: relative;
+  left: -1em;
+  top: -0.125em;
+
   font-family: $header-title-font-family;
+
+  font-size: 4em;
+  @extend .heading;
   font-weight: normal;
-  line-height: 1.2em;
-  margin-bottom: 0.6667em;
+  line-height: 1em;
+
 }
 body > header h2 {
+  position: relative;
+  left: -4em;
+  top: -1em;
+
   font-family: $header-subtitle-font-family;
+  text-align: right;
 }
 
 body {
